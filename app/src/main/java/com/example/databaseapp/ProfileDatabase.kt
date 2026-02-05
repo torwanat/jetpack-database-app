@@ -19,7 +19,9 @@ abstract class ProfileDatabase : RoomDatabase() {
                     context.applicationContext,
                     ProfileDatabase::class.java,
                     "profile_database"
-                ).build()
+                )
+                    .allowMainThreadQueries()
+                    .build()
                 INSTANCE = instance
                 instance
             }

@@ -8,17 +8,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.databaseapp.ui.theme.DatabaseAppTheme
 import com.example.navigationapp.Routes
 
-
 @Composable
-fun SettingsScreen(navController: NavController){
+fun SettingsScreen(navController: NavController, database: ProfileDatabase) {
+    var text by remember { mutableStateOf(TextFieldValue("")) }
+
     DatabaseAppTheme() {
         Column(
             Modifier
@@ -28,10 +35,17 @@ fun SettingsScreen(navController: NavController){
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "This is the second screen",
+                text = "Settings",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.padding(all = 10.dp)
+            )
+            TextField(
+                value = text,
+                onValueChange = { newText ->
+                    text = newText
+                    updateDatabaseSync(text.text, database)
+                }
             )
             Button(onClick = {
                 navController.popBackStack(Routes.chat, false)
@@ -39,5 +53,18 @@ fun SettingsScreen(navController: NavController){
                 Text(text = "Go back to chat")
             }
         }
+    }
+}
+
+fun updateDatabaseSync(username: String, database: ProfileDatabase) {
+    val dao = database.profileDao()
+    val profiles = dao.getProfilesSync()
+    
+    if (profiles.isEmpty()) {
+        dao.insert(Profile(username = username))
+    } else {
+        val existingProfile = profiles[0]
+        existingProfile.username = username
+        dao.update(existingProfile)
     }
 }

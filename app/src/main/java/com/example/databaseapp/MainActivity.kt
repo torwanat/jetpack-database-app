@@ -8,9 +8,14 @@ import androidx.activity.enableEdgeToEdge
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val database = initDatabase()
         enableEdgeToEdge()
         setContent {
-            AppNavigation()
+            AppNavigation(database)
         }
+    }
+
+    fun initDatabase() : ProfileDatabase {
+        return ProfileDatabase.getDatabase(this)
     }
 }
