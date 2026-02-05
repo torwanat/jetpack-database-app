@@ -15,7 +15,7 @@ fun AppNavigation(){
             Chat(navController = navController)
         }
         composable(Routes.secondScreen) {
-            SimpleSecondScreen(navController = navController)
+            SettingsScreen(navController = navController)
         }
     })
 }

@@ -18,7 +18,7 @@ import com.example.navigationapp.Routes
 
 
 @Composable
-fun SimpleSecondScreen(navController: NavController){
+fun SettingsScreen(navController: NavController){
     DatabaseAppTheme() {
         Column(
             Modifier
