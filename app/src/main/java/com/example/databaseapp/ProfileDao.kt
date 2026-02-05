@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 
 @Dao
 interface ProfileDao {
@@ -19,8 +20,8 @@ interface ProfileDao {
     @Delete
     fun delete(profile: Profile)
 
-    @Query("SELECT * FROM profiles")
-    fun getAllProfiles(): LiveData<List<Profile>>
+    @Upsert
+    fun upsert(profile: Profile)
 
     @Query("SELECT * FROM profiles")
     fun getProfilesSync(): List<Profile>

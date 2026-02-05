@@ -8,14 +8,14 @@ import com.example.navigationapp.Routes
 
 
 @Composable
-fun AppNavigation(database: ProfileDatabase){
+fun AppNavigation(dao: ProfileDao){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.chat, builder = {
         composable(Routes.chat) {
-            Chat(navController = navController, database = database)
+            Chat(navController = navController, dao = dao)
         }
         composable(Routes.secondScreen) {
-            SettingsScreen(navController = navController, database = database)
+            SettingsScreen(navController = navController, dao = dao)
         }
     })
 }

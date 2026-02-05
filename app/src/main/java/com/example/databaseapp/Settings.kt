@@ -23,7 +23,7 @@ import com.example.databaseapp.ui.theme.DatabaseAppTheme
 import com.example.navigationapp.Routes
 
 @Composable
-fun SettingsScreen(navController: NavController, database: ProfileDatabase) {
+fun SettingsScreen(navController: NavController, dao: ProfileDao) {
     var text by remember { mutableStateOf(TextFieldValue("")) }
 
     DatabaseAppTheme() {
@@ -44,7 +44,7 @@ fun SettingsScreen(navController: NavController, database: ProfileDatabase) {
                 value = text,
                 onValueChange = { newText ->
                     text = newText
-                    updateDatabaseSync(text.text, database)
+                    updateDatabaseSync(text.text, dao)
                 }
             )
             Button(onClick = {
@@ -56,15 +56,6 @@ fun SettingsScreen(navController: NavController, database: ProfileDatabase) {
     }
 }
 
-fun updateDatabaseSync(username: String, database: ProfileDatabase) {
-    val dao = database.profileDao()
-    val profiles = dao.getProfilesSync()
-    
-    if (profiles.isEmpty()) {
-        dao.insert(Profile(username = username))
-    } else {
-        val existingProfile = profiles[0]
-        existingProfile.username = username
-        dao.update(existingProfile)
-    }
+fun updateDatabaseSync(username: String, dao: ProfileDao) {
+    dao.upsert(Profile(username = username))
 }
