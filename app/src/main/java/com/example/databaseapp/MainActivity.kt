@@ -11,14 +11,9 @@ import com.example.databaseapp.navigation.AppNavigation
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val dao = getDao()
         enableEdgeToEdge()
         setContent {
-            AppNavigation(dao = dao)
+            AppNavigation()
         }
-    }
-
-    fun getDao() : ProfileDao {
-        return ProfileDatabase.getDatabase(this).profileDao()
     }
 }

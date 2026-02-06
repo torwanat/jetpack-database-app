@@ -121,7 +121,7 @@ fun Conversation(messages: List<Message>, modifier: Modifier, navController: Nav
 }
 
 @Composable
-fun Chat(navController: NavController, dao: ProfileDao) {
+fun Chat(navController: NavController) {
     DatabaseAppTheme {
         Scaffold(
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets,

@@ -11,11 +11,11 @@ import com.example.navigationapp.Routes
 
 
 @Composable
-fun AppNavigation(dao: ProfileDao){
+fun AppNavigation(){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.chat, builder = {
         composable(Routes.chat) {
-            Chat(navController = navController, dao = dao)
+            Chat(navController = navController)
         }
         composable(Routes.secondScreen) {
             SettingsScreen(navController = navController)
