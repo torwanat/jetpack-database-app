@@ -1,8 +1,5 @@
 package com.example.databaseapp.settings
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.databaseapp.data.Profile
@@ -21,7 +18,6 @@ class SettingsViewModel(val profileRepository: ProfileRepository) : ViewModel() 
 
     init {
         viewModelScope.launch {
-            // Load initial username from DB
             profileRepository.getAllProfilesStream()
                 .collect { profiles ->
                     val username = profiles.lastOrNull()?.username ?: ""
@@ -42,7 +38,6 @@ class SettingsViewModel(val profileRepository: ProfileRepository) : ViewModel() 
 
     fun updateUsername(username: String) {
         _usernameFlow.value = username
-        // Optional: Update UI immediately
         _settingsUiState.value = _settingsUiState.value.copy(username = username)
     }
 
