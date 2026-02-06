@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class Profile(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    var username: String
+    var username: String,
+    var filename: String
 )

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(val profileRepository: ProfileRepository) : ViewModel() {
@@ -16,13 +17,20 @@ class SettingsViewModel(val profileRepository: ProfileRepository) : ViewModel() 
 
     private val _usernameFlow = MutableStateFlow("")
 
+    private val _filenameFlow = MutableStateFlow("")
+
+
     init {
         viewModelScope.launch {
             profileRepository.getAllProfilesStream()
                 .collect { profiles ->
-                    val username = profiles.lastOrNull()?.username ?: ""
-                    _settingsUiState.value = _settingsUiState.value.copy(username = username)
+                    val profile = profiles.lastOrNull()
+                    val username = profile?.username ?: ""
+                    val filename = profile?.filename ?: ""
+
+                    _settingsUiState.value = SettingsUiState(username = username, filename = filename)
                     _usernameFlow.value = username
+                    _filenameFlow.value = filename
                 }
         }
 
@@ -31,7 +39,22 @@ class SettingsViewModel(val profileRepository: ProfileRepository) : ViewModel() 
                 .debounce(500)
                 .distinctUntilChanged()
                 .collect { username ->
-                    saveProfile(username)
+                    val currentProfile = profileRepository.getAllProfilesStream().first().lastOrNull()
+                    if (currentProfile == null || currentProfile.username != username) {
+                        saveProfile(username, _filenameFlow.value)
+                    }
+                }
+        }
+
+        viewModelScope.launch {
+            _filenameFlow
+                .debounce(500)
+                .distinctUntilChanged()
+                .collect { filename ->
+                    val currentProfile = profileRepository.getAllProfilesStream().first().lastOrNull()
+                    if (currentProfile == null || currentProfile.filename != filename) {
+                        saveProfile(_usernameFlow.value, filename)
+                    }
                 }
         }
     }
@@ -41,9 +64,14 @@ class SettingsViewModel(val profileRepository: ProfileRepository) : ViewModel() 
         _settingsUiState.value = _settingsUiState.value.copy(username = username)
     }
 
-    private suspend fun saveProfile(username: String) {
-        profileRepository.insertProfile(Profile(username = username))
+    fun updateImage(filename: String) {
+        _filenameFlow.value = filename
+        _settingsUiState.value = _settingsUiState.value.copy(filename = filename)
     }
 
-    data class SettingsUiState(val username: String = "")
+    private suspend fun saveProfile(username: String, filename: String) {
+        profileRepository.insertProfile(Profile(username = username, filename = filename))
+    }
+
+    data class SettingsUiState(val username: String = "", val filename: String = "")
 }
