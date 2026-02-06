@@ -1,6 +1,5 @@
 package com.example.databaseapp.chat
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,27 +33,48 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.databaseapp.data.ProfileDao
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.databaseapp.AppViewModelProvider
 import com.example.databaseapp.R
 import com.example.databaseapp.SampleData
 import com.example.databaseapp.ui.theme.DatabaseAppTheme
-import com.example.navigationapp.Routes
+import com.example.databaseapp.navigation.Routes
+import java.io.File
 
 data class Message(val author: String, val body: String)
 
 @Composable
-fun MessageCard(msg: Message) {
+fun MessageCard(msg: Message, author: String, imageFile: File) {
     Row {
-        Image(
-            painter = painterResource(R.drawable.migotka),
-            contentDescription = "Cat",
+
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageFile)
+                .crossfade(true)
+                .build(),
+            contentDescription = "Profile Image",
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape),
+            contentScale = ContentScale.Crop
         )
+
+//        Image(
+//            painter = painterResource(R.drawable.migotka),
+//            contentDescription = "Cat",
+//            modifier = Modifier
+//                .size(40.dp)
+//                .clip(CircleShape)
+//                .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
+//        )
 
         Spacer(modifier = Modifier.width(8.dp))
 
@@ -65,7 +85,7 @@ fun MessageCard(msg: Message) {
 
         Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
             Text(
-                text = msg.author,
+                text = author,
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.titleSmall
             )
@@ -91,7 +111,11 @@ fun MessageCard(msg: Message) {
 }
 
 @Composable
-fun Conversation(messages: List<Message>, modifier: Modifier, navController: NavController) {
+fun Conversation(messages: List<Message>, modifier: Modifier, navController: NavController, chatUiState: ChatUiState) {
+    val context = LocalContext.current
+    val imageFile = File(context.filesDir, chatUiState.filename)
+
+
     Column(modifier) {
         Row(
             Modifier
@@ -104,7 +128,7 @@ fun Conversation(messages: List<Message>, modifier: Modifier, navController: Nav
 
         ) {
             IconButton(onClick = {
-                navController.navigate(Routes.secondScreen)
+                navController.navigate(Routes.SECOND_SCREEN)
             }) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_settings_24),
@@ -114,14 +138,16 @@ fun Conversation(messages: List<Message>, modifier: Modifier, navController: Nav
         }
         LazyColumn {
             items(messages) {
-                    message -> MessageCard(message)
+                    message -> MessageCard(message, chatUiState.username, imageFile)
             }
         }
     }
 }
 
 @Composable
-fun Chat(navController: NavController) {
+fun Chat(navController: NavController, viewModel: ChatViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
+    val chatUiState by viewModel.chatUiState.collectAsState()
+
     DatabaseAppTheme {
         Scaffold(
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
@@ -129,7 +155,8 @@ fun Chat(navController: NavController) {
             Conversation(
                 SampleData.conversationSample,
                 modifier = Modifier.padding(padding),
-                navController = navController
+                navController = navController,
+                chatUiState = chatUiState
             )
         }
     }

@@ -1,6 +1,6 @@
-package com.example.navigationapp
+package com.example.databaseapp.navigation
 
 object Routes {
-    val chat = "chat"
-    val secondScreen = "secondScreen"
+    const val CHAT = "chat"
+    const val SECOND_SCREEN = "secondScreen"
 }

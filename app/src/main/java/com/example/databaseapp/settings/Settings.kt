@@ -31,7 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.databaseapp.AppViewModelProvider
 import com.example.databaseapp.ui.theme.DatabaseAppTheme
-import com.example.navigationapp.Routes
+import com.example.databaseapp.navigation.Routes
 import java.io.File
 import java.io.OutputStream
 import java.util.UUID
@@ -78,7 +78,7 @@ fun SettingsScreenBody(
                 onValueChange = onUsernameChange
                 )
             Button(onClick = {
-                navController.popBackStack(Routes.chat, false)
+                navController.popBackStack(Routes.CHAT, false)
             }) {
                 Text(text = "Go back to chat")
             }

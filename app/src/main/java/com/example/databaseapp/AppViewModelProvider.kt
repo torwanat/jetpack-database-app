@@ -6,12 +6,16 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.databaseapp.data.DatabaseApplication
 import com.example.databaseapp.settings.SettingsViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
+import com.example.databaseapp.chat.ChatViewModel
 
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             SettingsViewModel(databaseApplication().container.profileRepository)
+        }
+        initializer {
+            ChatViewModel(databaseApplication().container.profileRepository)
         }
     }
 }
