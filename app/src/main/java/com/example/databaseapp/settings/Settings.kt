@@ -100,7 +100,6 @@ fun PhotoContainer(settingsUiState: SettingsViewModel.SettingsUiState, onImageCh
     Column (
         modifier = Modifier.padding(16.dp),
     ) {
-        Log.d("PhotoContainer", "Filename: $savedImageFileName")
         if (savedImageFileName.isNotEmpty()) {
             val imageFile = File(context.filesDir, savedImageFileName)
             if (imageFile.exists()) {
@@ -116,8 +115,6 @@ fun PhotoContainer(settingsUiState: SettingsViewModel.SettingsUiState, onImageCh
                         .padding(10.dp),
                     contentScale = ContentScale.Crop
                 )
-            } else {
-                Log.e("PhotoContainer", "File does not exist: ${imageFile.absolutePath}")
             }
         }
         Button(
