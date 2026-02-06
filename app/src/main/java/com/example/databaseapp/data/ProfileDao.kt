@@ -1,6 +1,5 @@
-package com.example.databaseapp
+package com.example.databaseapp.data
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -8,21 +7,22 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProfileDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(profile: Profile)
+    suspend fun insert(profile: Profile)
 
     @Update
-    fun update(profile: Profile)
+    suspend fun update(profile: Profile)
 
     @Delete
-    fun delete(profile: Profile)
+    suspend fun delete(profile: Profile)
 
     @Upsert
-    fun upsert(profile: Profile)
+    suspend fun upsert(profile: Profile)
 
     @Query("SELECT * FROM profiles")
-    fun getProfilesSync(): List<Profile>
+    fun getAllProfiles(): Flow<List<Profile>>
 }

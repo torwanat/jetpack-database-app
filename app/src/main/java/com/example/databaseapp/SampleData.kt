@@ -1,6 +1,6 @@
-package com.example.navigationapp
+package com.example.databaseapp
 
-import com.example.databaseapp.Message
+import com.example.databaseapp.chat.Message
 
 object SampleData {
     val conversationSample = listOf(

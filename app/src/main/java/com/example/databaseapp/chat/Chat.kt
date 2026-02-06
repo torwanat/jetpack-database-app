@@ -1,4 +1,4 @@
-package com.example.databaseapp
+package com.example.databaseapp.chat
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -36,9 +36,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.ui.Alignment
 import androidx.navigation.NavController
+import com.example.databaseapp.data.ProfileDao
+import com.example.databaseapp.R
+import com.example.databaseapp.SampleData
 import com.example.databaseapp.ui.theme.DatabaseAppTheme
 import com.example.navigationapp.Routes
-import com.example.navigationapp.SampleData
 
 data class Message(val author: String, val body: String)
 
