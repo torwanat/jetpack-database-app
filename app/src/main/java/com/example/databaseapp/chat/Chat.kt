@@ -67,15 +67,6 @@ fun MessageCard(msg: Message, author: String, imageFile: File) {
             contentScale = ContentScale.Crop
         )
 
-//        Image(
-//            painter = painterResource(R.drawable.migotka),
-//            contentDescription = "Cat",
-//            modifier = Modifier
-//                .size(40.dp)
-//                .clip(CircleShape)
-//                .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
-//        )
-
         Spacer(modifier = Modifier.width(8.dp))
 
         var isExpanded by remember { mutableStateOf(false) }
